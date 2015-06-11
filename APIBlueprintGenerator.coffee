@@ -28,6 +28,7 @@ APIBlueprintGenerator = ->
         body_indentation += '    '
       try
         body = JSON.stringify(JSON.parse(body), null, 2)
+      body = "" if body is "OK"
       body = body.replace(/^/gm, body_indentation)
 
 
