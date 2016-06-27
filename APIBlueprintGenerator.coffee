@@ -81,6 +81,7 @@ APIBlueprintGenerator = ->
         contentType: paw_request.headers['Content-Type'],
         "body?": has_headers && has_body,
         body: body,
+        description: paw_request.description,
       }
 
   # Get a path from a URL
