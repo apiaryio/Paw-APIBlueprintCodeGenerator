@@ -88,6 +88,47 @@ APIBlueprintGenerator = ->
         description: description,
       }
 
+  # Generate a parameter List for the mustache context from a paw Request
+  #
+  # @param [Request] exchange The paw HTTP request
+  #
+  # @return [Object] The template context object
+  #
+  @parameter = (paw_request) ->
+    parameters = []
+    body = paw_request.body
+    has_body = body.length > 0
+    url_parameters = paw_request.getUrlParameters()
+    for key, value of url_parameters
+      parameters.push({
+        name: key,
+        example: value,
+        type: typeof(value)
+        })
+    if has_body
+      is_json = @isJSON(paw_request)
+      if is_json
+        body_parameters = JSON.parse(body)
+        for key,value of body_parameters
+          parameters.push({
+            name: key,
+            example: value,
+            type: typeof(value)
+            })
+      else
+        body_parameters = body.split("&")
+        for value in body_parameters
+          param = value.split("=")
+          parameters.push({
+            name: param[0],
+            example: param[1],
+            type: typeof(param[1])
+            })
+    return {
+      "parameters?":parameters.length > 0,
+      parameters:parameters
+    }
+
   # Get a path from a URL
   #
   # @param [String] url The given URL
@@ -100,6 +141,14 @@ APIBlueprintGenerator = ->
 
     path
 
+  # Check is Json Content
+  @isJSON = (paw_request) ->
+    for key, value of paw_request.headers
+      if key in ['Content-Type']
+        is_json = (value.search(/(json)/i) > -1)
+        break
+    return is_json
+
   @generate = (context) ->
     paw_request = context.getCurrentRequest()
     url = paw_request.url
@@ -109,6 +158,7 @@ APIBlueprintGenerator = ->
       path: @path(url),
       request: @request(paw_request),
       response: @response(paw_request.getLastExchange()),
+      parameter: @parameter(paw_request),
     )
 
   return
