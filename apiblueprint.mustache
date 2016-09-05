@@ -3,6 +3,16 @@
 {{#request.description?}}
 {{{request.description}}}
 {{/request.description?}}
+{{#parameter}}
+{{#parameters?}}
++ Parameters
+
+    {{#parameters}}
+    + {{{name}}}: {{{example}}} ({{{type}}}) -
+    {{/parameters}}
+
+{{/parameters?}}
+{{/parameter}}
 {{#request}}
 + Request{{#contentType}} ({{{contentType}}}){{/contentType}}
 

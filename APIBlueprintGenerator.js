@@ -93,6 +93,43 @@
       }
       return path;
     };
+    this.parameter = function(paw_request) {
+      var is_json, body, body_parameters, parameters, has_parameters;
+      body = paw_request.body;
+      has_parameters = false;
+      parameters = [];
+      if (body.length > 0) {
+        has_parameters = true;
+        is_json = this.isJSON(paw_request);
+        if (is_json) {
+          body_parameters = JSON.parse(body)
+          for (var name in body_parameters) {
+            var example = body_parameters[name]
+            var type = typeof(example);
+            parameters.push ({
+                name: name,
+                example: example,
+                type: type
+            })
+        }
+      }else {
+          body_parameters = body.split("&")
+          for (var index in body_parameters) {
+            var param = body_parameters[index].split("=")
+            var type = typeof(param[1]);
+            parameters.push ({
+                name: param[0],
+                example: param[1],
+                type: type
+            })
+          }
+        }
+      }
+      return {
+        "parameters?":has_parameters,
+        parameters:parameters
+      }
+    };
     this.generate = function(context) {
       var paw_request, template, url;
       paw_request = context.getCurrentRequest();
@@ -104,6 +141,17 @@
         request: this.request(paw_request),
         response: this.response(paw_request.getLastExchange())
       });
+    };
+    this.isJSON = function(paw_request) {
+      var key, ref, is_json;
+      ref = paw_request.headers;
+      for (key in ref) {
+        if (key === 'Content-Type') {
+           is_json = ref[key].search(/(json)/i) > -1;
+           break;
+        }
+      }
+      return is_json;
     };
   };
 
