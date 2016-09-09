@@ -103,7 +103,7 @@ APIBlueprintGenerator = ->
       parameters.push({
         name: key,
         example: value,
-        type: typeof(value)
+        type: @isNumber(value)
         })
     if has_body
       is_json = @isJSON(paw_request)
@@ -113,7 +113,7 @@ APIBlueprintGenerator = ->
           parameters.push({
             name: key,
             example: value,
-            type: typeof(value)
+            type: @isNumber(value)
             })
       else
         body_parameters = body.split("&")
@@ -122,7 +122,7 @@ APIBlueprintGenerator = ->
           parameters.push({
             name: param[0],
             example: param[1],
-            type: typeof(param[1])
+            type: @isNumber(param[1])
             })
     return {
       "parameters?":parameters.length > 0,
@@ -148,6 +148,13 @@ APIBlueprintGenerator = ->
         is_json = (value.search(/(json)/i) > -1)
         break
     return is_json
+
+  @isNumber = (value) ->
+    match = /^[0-9]*$/.test(value)
+    if(match && value.length != 0 )
+      return "number"
+    else
+      return "string"
 
   @generate = (context) ->
     paw_request = context.getCurrentRequest()

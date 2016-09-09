@@ -107,7 +107,7 @@
         parameters.push({
           name: key,
           example: value,
-          type: typeof value
+          type: this.isNumber(value)
         });
       }
       if (has_body) {
@@ -119,7 +119,7 @@
             parameters.push({
               name: key,
               example: value,
-              type: typeof value
+              type: this.isNumber(value)
             });
           }
         } else {
@@ -130,7 +130,7 @@
             parameters.push({
               name: param[0],
               example: param[1],
-              type: typeof param[1]
+              type: this.isNumber(param[1])
             });
           }
         }
@@ -159,6 +159,15 @@
         }
       }
       return is_json;
+    };
+    this.isNumber = function(value) {
+      var match;
+      match = /^[0-9]*$/.test(value);
+      if (match && value.length !== 0) {
+        return "number";
+      } else {
+        return "string";
+      }
     };
     this.generate = function(context) {
       var paw_request, template, url;
