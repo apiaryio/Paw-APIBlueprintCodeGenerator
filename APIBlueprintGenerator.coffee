@@ -37,7 +37,11 @@ APIBlueprintGenerator = ->
       body_indentation = '        '
       if has_headers
         body_indentation += '    '
+      try
+        body = JSON.stringify(JSON.parse(body), null, 2)
+      body = "" if body is "OK"
       body = body.replace(/^/gm, body_indentation)
+
 
     return {
       statusCode: exchange.responseStatusCode,
@@ -73,6 +77,8 @@ APIBlueprintGenerator = ->
       body_indentation = '        '
       if has_headers
         body_indentation += '    '
+      try
+        body = JSON.stringify(JSON.parse(body), null, 2)
       body = body.replace(/^/gm, body_indentation)
 
     description = paw_request.description
