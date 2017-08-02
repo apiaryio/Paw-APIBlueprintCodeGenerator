@@ -99,7 +99,7 @@ APIBlueprintGenerator = ->
     if !path
       path = '/'
 
-    path
+    unescape(path)
 
   @generate = (context) ->
     paw_request = context.getCurrentRequest()
