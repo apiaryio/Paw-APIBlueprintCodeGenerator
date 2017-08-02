@@ -91,7 +91,7 @@
       if (!path) {
         path = '/';
       }
-      return path;
+      return unescape(path);
     };
     this.generate = function(context) {
       var paw_request, template, url;
