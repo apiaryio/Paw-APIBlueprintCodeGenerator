@@ -104,12 +104,13 @@ APIBlueprintGenerator = ->
   @generate = (context) ->
     paw_request = context.getCurrentRequest()
     url = paw_request.url
+    that = this
     template = readFile("apiblueprint.mustache")
     Mustache.render(template,
       method: paw_request.method,
       path: @path(url),
       request: @request(paw_request),
-      response: @response(paw_request.getLastExchange()),
+      response: paw_request.getAllExchanges().map (r) -> that.response(r),
     )
 
   return
