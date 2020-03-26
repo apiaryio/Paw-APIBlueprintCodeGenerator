@@ -101,7 +101,7 @@ APIBlueprintGenerator = ->
     if !path
       path = '/'
 
-    path
+    unescape(path)
 
   @renderPawItems = (items, level = 1) ->
     sections = for item in items
